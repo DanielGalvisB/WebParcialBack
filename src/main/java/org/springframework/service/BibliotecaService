@@ -1,0 +1,42 @@
+package com.parcialwebback.service;
+
+import com.parcialwebback.model.Biblioteca;
+import com.parcialwebback.repository.BibliotecaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class BibliotecaService {
+
+    @Autowired
+    private BibliotecaRepository repository;
+
+    public Biblioteca crear(Biblioteca biblioteca) {
+        return repository.save(biblioteca);
+    }
+
+    public List<Biblioteca> listarTodos() {
+        return repository.findAll();
+    }
+
+    public Optional<Biblioteca> consultarPorId(Long id) {
+        return repository.findById(id);
+    }
+
+    public Biblioteca actualizar(Long id, Biblioteca bibliotecaDetalles) {
+        return repository.findById(id).map(biblioteca -> {
+            biblioteca.setNombre(bibliotecaDetalles.getNombre());
+            biblioteca.setDireccion(bibliotecaDetalles.getDireccion());
+            biblioteca.setTelefono(bibliotecaDetalles.getTelefono());
+            biblioteca.setResponsable(bibliotecaDetalles.getResponsable());
+            return repository.save(biblioteca);
+        }).orElseThrow(() -> new RuntimeException("Biblioteca no encontrada con id: " + id));
+    }
+
+    public void eliminar(Long id) {
+        repository.deleteById(id);
+    }
+}

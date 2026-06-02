@@ -1,0 +1,43 @@
+package com.parcialwebback.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "libro")
+public class Libro {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "El título es obligatorio")
+    @Column(nullable = false)
+    private String titulo;
+
+    @NotBlank(message = "El autor es obligatorio")
+    @Column(nullable = false)
+    private String autor;
+
+    @NotBlank(message = "La categoría es obligatoria")
+    @Column(nullable = false)
+    private String categoria;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "biblioteca_id", nullable = false)
+    @JsonIgnore // Evita ciclos infinitos al serializar JSON
+    private Biblioteca biblioteca;
+
+    // Getters y Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getAutor() { return autor; }
+    public void setAutor(String autor) { this.autor = autor; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public Biblioteca getBiblioteca() { return biblioteca; }
+    public void setBiblioteca(Biblioteca biblioteca) { this.biblioteca = biblioteca; }
+}
